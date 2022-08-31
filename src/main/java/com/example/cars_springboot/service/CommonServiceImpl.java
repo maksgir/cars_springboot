@@ -1,9 +1,12 @@
 package com.example.cars_springboot.service;
 
-import com.example.cars_springboot.dao.PersonDAO;
+import com.example.cars_springboot.dao.CommonDAO;
+import com.example.cars_springboot.dto.CarDTO;
 import com.example.cars_springboot.dto.PersonWithCarsDTO;
 import com.example.cars_springboot.dto.PersonWithoutCarsDTO;
+import com.example.cars_springboot.entity.Car;
 import com.example.cars_springboot.entity.Person;
+import com.example.cars_springboot.exception.FutureBirthDateException;
 import com.example.cars_springboot.util.ObjectConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,17 +18,17 @@ import java.util.List;
 
 @Service
 @Transactional
-public class PersonServiceImpl implements PersonService {
+public class CommonServiceImpl implements CommonService {
 
     @Autowired
-    private PersonDAO personDAO;
+    private CommonDAO dao;
 
     @Autowired
     private ObjectConverter converter;
 
     @Override
     public List<PersonWithCarsDTO> getAllPeopleWithCars() {
-        List<Person> personList = personDAO.getAllPeopleWithCars();
+        List<Person> personList = dao.getAllPeopleWithCars();
 
         List<PersonWithCarsDTO> personWithCarsDTOS = new ArrayList<>();
 
@@ -39,9 +42,26 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public void savePerson(PersonWithoutCarsDTO personWithoutCarsDTO) throws ParseException {
+    public void savePerson(PersonWithoutCarsDTO personWithoutCarsDTO) throws ParseException, FutureBirthDateException {
+
         Person personEntity = converter.convertPersonDTOtoEntity(personWithoutCarsDTO);
 
-        personDAO.savePerson(personEntity);
+        dao.savePerson(personEntity);
+    }
+
+    @Override
+    public PersonWithCarsDTO getPersonById(long id) {
+
+        Person personEntity = dao.getPersonById(id);
+        PersonWithCarsDTO personDTO = converter.convertPersonEntityToDTO(personEntity);
+
+        return personDTO;
+    }
+
+    @Override
+    public void saveCar(CarDTO carDTO) {
+        Car carEntity = converter.convertCarDTOtoEntity(carDTO);
+        dao.saveCar(carEntity, carDTO.getOwnerId());
+
     }
 }

@@ -4,7 +4,8 @@ package com.example.cars_springboot.controller;
 import com.example.cars_springboot.dto.CarDTO;
 import com.example.cars_springboot.dto.PersonWithCarsDTO;
 import com.example.cars_springboot.dto.PersonWithoutCarsDTO;
-import com.example.cars_springboot.service.PersonService;
+import com.example.cars_springboot.exception.FutureBirthDateException;
+import com.example.cars_springboot.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,31 +18,31 @@ import java.util.List;
 public class AppController {
 
     @Autowired
-    private PersonService personService;
+    private CommonService service;
 
     @PostMapping("/person")
-    public void addNewEmployee(@RequestBody PersonWithoutCarsDTO personWithoutCarDTO) throws ParseException {
-        personService.savePerson(personWithoutCarDTO);
+    public void addNewPerson(@RequestBody PersonWithoutCarsDTO personWithoutCarDTO) throws ParseException, FutureBirthDateException {
+        service.savePerson(personWithoutCarDTO);
     }
 
     @PostMapping("/car")
-    public void addNewEmployee(@RequestBody CarDTO carWithOwner) {
-
+    public void addNewCar(@RequestBody CarDTO carWithOwner) {
+        service.saveCar(carWithOwner);
     }
 
     @GetMapping("/personwithcars/{personid}")
-    public PersonWithCarsDTO getEmployee(@PathVariable int personid) {
+    public PersonWithCarsDTO getPersonWithCars(@PathVariable int personid) {
 
-        return personService.getAllPeopleWithCars().get(personid);
+        return service.getPersonById(personid);
     }
 
     @GetMapping("/peoplewithcars")
-    public List<PersonWithCarsDTO> getEmployee() {
-        return personService.getAllPeopleWithCars();
+    public List<PersonWithCarsDTO> getPeople() {
+        return service.getAllPeopleWithCars();
     }
 
     @ExceptionHandler
-    public ResponseEntity<String> handleException(Exception e){
+    public ResponseEntity<String> handleException(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

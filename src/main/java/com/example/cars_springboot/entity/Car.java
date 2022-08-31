@@ -22,7 +22,7 @@ public class Car {
     private String model;
 
     @Column(name = "horse_power")
-    private int horsePower;
+    private int horsepower;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
@@ -30,7 +30,7 @@ public class Car {
 
     public Car(String model, int horsePower) {
         this.model = model;
-        this.horsePower = horsePower;
+        this.horsepower = horsePower;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class Car {
         return "Car{" +
                 "id=" + id +
                 ", model='" + model + '\'' +
-                ", horsePower=" + horsePower +
+                ", horsePower=" + horsepower +
                 ", owner=" + owner +
                 '}';
     }

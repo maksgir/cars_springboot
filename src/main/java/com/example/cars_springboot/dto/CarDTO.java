@@ -9,8 +9,8 @@ import java.sql.Date;
 @Getter
 @Setter
 public class CarDTO {
-    private int id;
+    private long id;
     private String model;
-    private int horsePower;
+    private int horsepower;
     private long ownerId;
 }
