@@ -15,9 +15,8 @@ import javax.persistence.*;
 public class Car {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private long id;
 
     @Column(name = "model")
     private String model;
@@ -25,7 +24,7 @@ public class Car {
     @Column(name = "horse_power")
     private int horsePower;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "owner_id")
     private Person owner;
 
