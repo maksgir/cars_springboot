@@ -4,13 +4,12 @@ import com.example.cars_springboot.dao.CommonDAO;
 import com.example.cars_springboot.dto.CarDTO;
 import com.example.cars_springboot.dto.PersonWithCarsDTO;
 import com.example.cars_springboot.dto.PersonWithoutCarsDTO;
+import com.example.cars_springboot.dto.Statistics;
 import com.example.cars_springboot.entity.Car;
 import com.example.cars_springboot.entity.Person;
 import com.example.cars_springboot.entity.Vendor;
-import com.example.cars_springboot.exception.BadModelException;
-import com.example.cars_springboot.exception.FutureBirthDateException;
-import com.example.cars_springboot.exception.NoOwnerFoundException;
-import com.example.cars_springboot.util.ModelValidator;
+import com.example.cars_springboot.exception.*;
+import com.example.cars_springboot.util.CarValidator;
 import com.example.cars_springboot.util.ObjectConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,22 +30,7 @@ public class CommonServiceImpl implements CommonService {
     private ObjectConverter converter;
 
     @Autowired
-    private ModelValidator modelValidator;
-
-    @Override
-    public List<PersonWithCarsDTO> getAllPeopleWithCars() {
-        List<Person> personList = dao.getAllPeopleWithCars();
-
-        List<PersonWithCarsDTO> personWithCarsDTOS = new ArrayList<>();
-
-        for (Person personEntity : personList) {
-            personWithCarsDTOS.add(converter.convertPersonEntityToDTO(personEntity));
-        }
-
-        return personWithCarsDTOS;
-
-
-    }
+    private CarValidator carValidator;
 
     @Override
     public void savePerson(PersonWithoutCarsDTO personWithoutCarsDTO) throws ParseException, FutureBirthDateException {
@@ -57,7 +41,7 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public PersonWithCarsDTO getPersonById(long id) {
+    public PersonWithCarsDTO getPersonById(long id) throws PersonNotFoundException {
 
         Person personEntity = dao.getPersonById(id);
         PersonWithCarsDTO personDTO = converter.convertPersonEntityToDTO(personEntity);
@@ -66,15 +50,25 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public void saveCar(CarDTO carDTO) throws NoOwnerFoundException, BadModelException {
+    public void saveCar(CarDTO carDTO) throws PersonNotFoundException, BadModelException, BadHorsePowerException, TooYoungDriverException {
         Car carEntity = converter.convertCarDTOtoEntity(carDTO);
 
-        if (!modelValidator.modelIsCorrect(carDTO.getModel())) {
-            throw new BadModelException("Bad model");
-        }
-        saveVendor(carDTO.getModel());
-        dao.saveCar(carEntity, carDTO.getOwnerId());
+        carValidator.validateCar(carDTO);
 
+        dao.saveCar(carEntity, carDTO.getOwnerId());
+        saveVendor(carDTO.getModel());
+
+    }
+
+    @Override
+    public Statistics getStatistics() {
+        Statistics statistics = new Statistics(dao.getPeopleCount(), dao.getCarsCount(), dao.getVendorsCount());
+        return statistics;
+    }
+
+    @Override
+    public void clear() {
+        dao.clear();
     }
 
     private void saveVendor(String model) {

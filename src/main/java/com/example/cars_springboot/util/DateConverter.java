@@ -16,4 +16,9 @@ public class DateConverter {
 
         return sql;
     }
+
+    public String convertSQLDateToString(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
+        return sdf.format(date);
+    }
 }

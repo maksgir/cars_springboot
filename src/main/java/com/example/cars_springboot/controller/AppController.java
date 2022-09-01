@@ -4,9 +4,8 @@ package com.example.cars_springboot.controller;
 import com.example.cars_springboot.dto.CarDTO;
 import com.example.cars_springboot.dto.PersonWithCarsDTO;
 import com.example.cars_springboot.dto.PersonWithoutCarsDTO;
-import com.example.cars_springboot.exception.BadModelException;
-import com.example.cars_springboot.exception.FutureBirthDateException;
-import com.example.cars_springboot.exception.NoOwnerFoundException;
+import com.example.cars_springboot.dto.Statistics;
+import com.example.cars_springboot.exception.*;
 import com.example.cars_springboot.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,19 +27,25 @@ public class AppController {
     }
 
     @PostMapping("/car")
-    public void addNewCar(@RequestBody CarDTO carWithOwner) throws NoOwnerFoundException, BadModelException {
+    public void addNewCar(@RequestBody CarDTO carWithOwner) throws PersonNotFoundException, BadModelException, BadHorsePowerException, TooYoungDriverException {
         service.saveCar(carWithOwner);
     }
 
     @GetMapping("/personwithcars/{personid}")
-    public PersonWithCarsDTO getPersonWithCars(@PathVariable int personid) {
+    public PersonWithCarsDTO getPersonWithCars(@PathVariable int personid) throws PersonNotFoundException {
 
         return service.getPersonById(personid);
     }
 
-    @GetMapping("/peoplewithcars")
-    public List<PersonWithCarsDTO> getPeople() {
-        return service.getAllPeopleWithCars();
+    @GetMapping("/statistics")
+    public Statistics getStatistics() {
+        return service.getStatistics();
+    }
+
+    @GetMapping("/clear")
+    public ResponseEntity<String> clear() {
+        service.clear();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ExceptionHandler
@@ -49,7 +54,9 @@ public class AppController {
     }
 
     @ExceptionHandler
-    public ResponseEntity<String> handleException(NoOwnerFoundException e) {
+    public ResponseEntity<String> handleException(PersonNotFoundException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+
 }
