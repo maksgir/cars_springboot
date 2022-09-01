@@ -4,6 +4,7 @@ package com.example.cars_springboot.controller;
 import com.example.cars_springboot.dto.CarDTO;
 import com.example.cars_springboot.dto.PersonWithCarsDTO;
 import com.example.cars_springboot.dto.PersonWithoutCarsDTO;
+import com.example.cars_springboot.exception.BadModelException;
 import com.example.cars_springboot.exception.FutureBirthDateException;
 import com.example.cars_springboot.exception.NoOwnerFoundException;
 import com.example.cars_springboot.service.CommonService;
@@ -27,7 +28,7 @@ public class AppController {
     }
 
     @PostMapping("/car")
-    public void addNewCar(@RequestBody CarDTO carWithOwner) throws NoOwnerFoundException {
+    public void addNewCar(@RequestBody CarDTO carWithOwner) throws NoOwnerFoundException, BadModelException {
         service.saveCar(carWithOwner);
     }
 

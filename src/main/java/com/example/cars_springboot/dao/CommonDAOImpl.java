@@ -2,6 +2,7 @@ package com.example.cars_springboot.dao;
 
 import com.example.cars_springboot.entity.Car;
 import com.example.cars_springboot.entity.Person;
+import com.example.cars_springboot.entity.Vendor;
 import com.example.cars_springboot.exception.NoOwnerFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -38,10 +39,16 @@ public class CommonDAOImpl implements CommonDAO {
     @Override
     public void saveCar(Car car, long id) throws NoOwnerFoundException {
         Person owner = entityManager.find(Person.class, id);
-        if (owner == null){
-            throw new NoOwnerFoundException("Owner with ID="+id+" wasn't found");
+        if (owner == null) {
+            throw new NoOwnerFoundException("Owner with ID=" + id + " wasn't found");
         }
         car.setOwner(owner);
         entityManager.persist(car);
+    }
+
+    @Override
+    public void saveVendor(Vendor vendor) {
+        System.out.println(vendor);
+        entityManager.persist(vendor);
     }
 }

@@ -6,8 +6,11 @@ import com.example.cars_springboot.dto.PersonWithCarsDTO;
 import com.example.cars_springboot.dto.PersonWithoutCarsDTO;
 import com.example.cars_springboot.entity.Car;
 import com.example.cars_springboot.entity.Person;
+import com.example.cars_springboot.entity.Vendor;
+import com.example.cars_springboot.exception.BadModelException;
 import com.example.cars_springboot.exception.FutureBirthDateException;
 import com.example.cars_springboot.exception.NoOwnerFoundException;
+import com.example.cars_springboot.util.ModelValidator;
 import com.example.cars_springboot.util.ObjectConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,9 @@ public class CommonServiceImpl implements CommonService {
 
     @Autowired
     private ObjectConverter converter;
+
+    @Autowired
+    private ModelValidator modelValidator;
 
     @Override
     public List<PersonWithCarsDTO> getAllPeopleWithCars() {
@@ -60,9 +66,20 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public void saveCar(CarDTO carDTO) throws NoOwnerFoundException {
+    public void saveCar(CarDTO carDTO) throws NoOwnerFoundException, BadModelException {
         Car carEntity = converter.convertCarDTOtoEntity(carDTO);
+
+        if (!modelValidator.modelIsCorrect(carDTO.getModel())) {
+            throw new BadModelException("Bad model");
+        }
+        saveVendor(carDTO.getModel());
         dao.saveCar(carEntity, carDTO.getOwnerId());
 
+    }
+
+    private void saveVendor(String model) {
+        String vendorName = model.split("-")[0];
+
+        dao.saveVendor(new Vendor(vendorName));
     }
 }

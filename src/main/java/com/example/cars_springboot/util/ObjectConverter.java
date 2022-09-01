@@ -6,6 +6,7 @@ import com.example.cars_springboot.dto.PersonWithCarsDTO;
 import com.example.cars_springboot.dto.PersonWithoutCarsDTO;
 import com.example.cars_springboot.entity.Car;
 import com.example.cars_springboot.entity.Person;
+import com.example.cars_springboot.exception.BadModelException;
 import com.example.cars_springboot.exception.FutureBirthDateException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class ObjectConverter {
         BeanUtils.copyProperties(personDTO, personEntity);
 
         Date birthDate = dateConverter.convertStringDateToSQL(personDTO.getBirthdate());
-        if (birthDate.after(Date.valueOf(LocalDate.now()))){
+        if (birthDate.after(Date.valueOf(LocalDate.now()))) {
             throw new FutureBirthDateException("BirthDate is in the future");
         }
 
@@ -63,9 +64,11 @@ public class ObjectConverter {
         return carDTO;
     }
 
-    public Car convertCarDTOtoEntity(CarDTO carDTO){
+    public Car convertCarDTOtoEntity(CarDTO carDTO) throws BadModelException {
         Car carEntity = new Car();
+
         BeanUtils.copyProperties(carDTO, carEntity);
+
 
         return carEntity;
     }
