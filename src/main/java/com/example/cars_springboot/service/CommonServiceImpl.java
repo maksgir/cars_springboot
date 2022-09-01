@@ -7,6 +7,7 @@ import com.example.cars_springboot.dto.PersonWithoutCarsDTO;
 import com.example.cars_springboot.entity.Car;
 import com.example.cars_springboot.entity.Person;
 import com.example.cars_springboot.exception.FutureBirthDateException;
+import com.example.cars_springboot.exception.NoOwnerFoundException;
 import com.example.cars_springboot.util.ObjectConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,7 +60,7 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public void saveCar(CarDTO carDTO) {
+    public void saveCar(CarDTO carDTO) throws NoOwnerFoundException {
         Car carEntity = converter.convertCarDTOtoEntity(carDTO);
         dao.saveCar(carEntity, carDTO.getOwnerId());
 

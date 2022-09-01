@@ -5,6 +5,7 @@ import com.example.cars_springboot.dto.CarDTO;
 import com.example.cars_springboot.dto.PersonWithCarsDTO;
 import com.example.cars_springboot.dto.PersonWithoutCarsDTO;
 import com.example.cars_springboot.exception.FutureBirthDateException;
+import com.example.cars_springboot.exception.NoOwnerFoundException;
 import com.example.cars_springboot.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class AppController {
     }
 
     @PostMapping("/car")
-    public void addNewCar(@RequestBody CarDTO carWithOwner) {
+    public void addNewCar(@RequestBody CarDTO carWithOwner) throws NoOwnerFoundException {
         service.saveCar(carWithOwner);
     }
 
@@ -44,5 +45,10 @@ public class AppController {
     @ExceptionHandler
     public ResponseEntity<String> handleException(Exception e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleException(NoOwnerFoundException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
