@@ -22,7 +22,7 @@ public class AppController {
     private CommonService service;
 
     @PostMapping("/person")
-    public void addNewPerson(@RequestBody PersonWithoutCarsDTO personWithoutCarDTO) throws ParseException, FutureBirthDateException {
+    public void addNewPerson(@RequestBody PersonWithoutCarsDTO personWithoutCarDTO) throws ParseException, FutureBirthDateException, BadPersonDataException {
         service.savePerson(personWithoutCarDTO);
     }
 
@@ -31,8 +31,8 @@ public class AppController {
         service.saveCar(carWithOwner);
     }
 
-    @GetMapping("/personwithcars/{personid}")
-    public PersonWithCarsDTO getPersonWithCars(@PathVariable int personid) throws PersonNotFoundException {
+    @GetMapping("/personwithcars")
+    public PersonWithCarsDTO getPersonWithCars(@RequestParam("personid") long personid) throws PersonNotFoundException {
 
         return service.getPersonById(personid);
     }

@@ -10,7 +10,7 @@ import java.text.ParseException;
 import java.util.List;
 
 public interface CommonService {
-    void savePerson(PersonWithoutCarsDTO personWithoutCarsDTO) throws ParseException, FutureBirthDateException;
+    void savePerson(PersonWithoutCarsDTO personWithoutCarsDTO) throws ParseException, FutureBirthDateException, BadPersonDataException;
     PersonWithCarsDTO getPersonById(long id) throws PersonNotFoundException;
     void saveCar(CarDTO carDTO) throws PersonNotFoundException, BadModelException, BadHorsePowerException, TooYoungDriverException;
     Statistics getStatistics();

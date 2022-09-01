@@ -33,7 +33,11 @@ public class CommonServiceImpl implements CommonService {
     private CarValidator carValidator;
 
     @Override
-    public void savePerson(PersonWithoutCarsDTO personWithoutCarsDTO) throws ParseException, FutureBirthDateException {
+    public void savePerson(PersonWithoutCarsDTO personWithoutCarsDTO) throws ParseException, FutureBirthDateException, BadPersonDataException {
+
+        if (personWithoutCarsDTO.getId()==0){
+            throw new BadPersonDataException("Id is empty");
+        }
 
         Person personEntity = converter.convertPersonDTOtoEntity(personWithoutCarsDTO);
 

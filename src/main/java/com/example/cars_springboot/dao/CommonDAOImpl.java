@@ -46,8 +46,12 @@ public class CommonDAOImpl implements CommonDAO {
 
     @Override
     public void saveVendor(Vendor vendor) {
-        System.out.println(vendor);
-        em.persist(vendor);
+        try{
+            em.merge(vendor);
+        }catch (Exception e){
+            System.out.println(e.getMessage());;
+        }
+
     }
 
     @Override

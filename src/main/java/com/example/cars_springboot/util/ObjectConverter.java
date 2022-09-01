@@ -29,7 +29,8 @@ public class ObjectConverter {
 
         BeanUtils.copyProperties(personEntity, personDTO);
 
-        personDTO.setBirthDateString(dateConverter.convertSQLDateToString(personEntity.getBirthDate()));
+
+        personDTO.setBirthdate(dateConverter.convertSQLDateToString(personEntity.getBirthDate()));
         List<CarDTO> carDTOList = new ArrayList<>();
 
         for (Car carEntity : personEntity.getCars()) {
