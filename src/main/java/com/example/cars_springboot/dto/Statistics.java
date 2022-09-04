@@ -9,12 +9,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Statistics {
-    private long personcoun;
+    private long personcount;
     private long carcount;
     private long uniquevendorcount;
 
     public Statistics(long personcoun, long carcount, long uniquevendorcount) {
-        this.personcoun = personcoun;
+        this.personcount = personcoun;
         this.carcount = carcount;
         this.uniquevendorcount = uniquevendorcount;
     }

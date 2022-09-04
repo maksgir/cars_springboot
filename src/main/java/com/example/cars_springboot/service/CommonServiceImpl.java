@@ -16,8 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Locale;
 
 @Service
 @Transactional
@@ -33,10 +32,10 @@ public class CommonServiceImpl implements CommonService {
     private CarValidator carValidator;
 
     @Override
-    public void savePerson(PersonWithoutCarsDTO personWithoutCarsDTO) throws ParseException, FutureBirthDateException, BadPersonDataException {
+    public void savePerson(PersonWithoutCarsDTO personWithoutCarsDTO) throws ParseException, FutureBirthDateException, BadEntityDataException {
 
         if (personWithoutCarsDTO.getId()==0){
-            throw new BadPersonDataException("Id is empty");
+            throw new BadEntityDataException("Id is empty");
         }
 
         Person personEntity = converter.convertPersonDTOtoEntity(personWithoutCarsDTO);
@@ -54,7 +53,7 @@ public class CommonServiceImpl implements CommonService {
     }
 
     @Override
-    public void saveCar(CarDTO carDTO) throws PersonNotFoundException, BadModelException, BadHorsePowerException, TooYoungDriverException {
+    public void saveCar(CarDTO carDTO) throws PersonNotFoundException, BadModelException, BadHorsePowerException, TooYoungDriverException, BadEntityDataException {
         Car carEntity = converter.convertCarDTOtoEntity(carDTO);
 
         carValidator.validateCar(carDTO);
@@ -76,7 +75,7 @@ public class CommonServiceImpl implements CommonService {
     }
 
     private void saveVendor(String model) {
-        String vendorName = model.split("-")[0];
+        String vendorName = model.split("-")[0].toUpperCase(Locale.ROOT);
 
         dao.saveVendor(new Vendor(vendorName));
     }

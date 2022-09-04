@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.List;
 
 @RestController
 public class AppController {
@@ -22,12 +21,12 @@ public class AppController {
     private CommonService service;
 
     @PostMapping("/person")
-    public void addNewPerson(@RequestBody PersonWithoutCarsDTO personWithoutCarDTO) throws ParseException, FutureBirthDateException, BadPersonDataException {
+    public void addNewPerson(@RequestBody PersonWithoutCarsDTO personWithoutCarDTO) throws ParseException, FutureBirthDateException, BadEntityDataException {
         service.savePerson(personWithoutCarDTO);
     }
 
     @PostMapping("/car")
-    public void addNewCar(@RequestBody CarDTO carWithOwner) throws PersonNotFoundException, BadModelException, BadHorsePowerException, TooYoungDriverException {
+    public void addNewCar(@RequestBody CarDTO carWithOwner) throws PersonNotFoundException, BadModelException, BadHorsePowerException, TooYoungDriverException, BadEntityDataException {
         service.saveCar(carWithOwner);
     }
 
